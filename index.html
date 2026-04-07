@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Location Meublée — Votre séjour idéal</title>
+<meta name="description" content="Location meublée de tourisme — séjour confortable et tout équipé.">
+<style>
+  :root {
+    --primary: #2c5f7c;
+    --primary-light: #3a7ca5;
+    --accent: #d4a853;
+    --bg: #faf9f6;
+    --card: #ffffff;
+    --text: #2d3436;
+    --text-light: #636e72;
+    --radius: 14px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: #fff;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    opacity: 0.3;
+  }
+  .hero-content { position: relative; z-index: 1; padding: 2rem; max-width: 700px; }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; margin-bottom: .5rem; }
+  .hero .subtitle { font-size: 1.25rem; opacity: .9; margin-bottom: 1.5rem; }
+  .hero .badge { display: inline-block; background: var(--accent); color: #fff; padding: .4rem 1.2rem; border-radius: 50px; font-weight: 600; font-size: .95rem; }
+  
+  /* NAV STICKY */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--card);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    display: flex; justify-content: center; gap: 1rem;
+    padding: .8rem 1rem;
+    flex-wrap: wrap;
+  }
+  .nav a {
+    text-decoration: none; color: var(--primary);
+    font-weight: 500; font-size: .95rem;
+    padding: .3rem .8rem; border-radius: 8px;
+    transition: background .2s;
+  }
+  .nav a:hover { background: rgba(44,95,124,0.08); }
+  
+  /* SECTIONS */
+  section { max-width: 960px; margin: 0 auto; padding: 3rem 1.5rem; }
+  section h2 {
+    font-size: 1.6rem; color: var(--primary); margin-bottom: 1.5rem;
+    padding-bottom: .5rem; border-bottom: 3px solid var(--accent);
+    display: inline-block;
+  }
+  
+  /* DESCRIPTION */
+  .description-text { font-size: 1.05rem; color: var(--text-light); max-width: 700px; }
+  .key-info {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem; margin-top: 1.5rem;
+  }
+  .key-info-item {
+    background: var(--card); border-radius: var(--radius);
+    padding: 1.2rem; text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .key-info-item .icon { font-size: 1.8rem; margin-bottom: .3rem; }
+  .key-info-item .label { font-size: .85rem; color: var(--text-light); }
+  .key-info-item .value { font-weight: 700; font-size: 1.1rem; }
+  
+  /* PHOTOS */
+  .gallery {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .gallery img {
+    width: 100%; height: 220px; object-fit: cover;
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    transition: transform .3s;
+    cursor: pointer;
+  }
+  .gallery img:hover { transform: scale(1.03); }
+  .photo-placeholder {
+    width: 100%; height: 220px;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, #dfe6e9, #b2bec3);
+    display: flex; align-items: center; justify-content: center;
+    color: #636e72; font-size: .9rem;
+    box-shadow: var(--shadow);
+  }
+  
+  /* EQUIPEMENTS */
+  .equip-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: .8rem;
+  }
+  .equip-item {
+    background: var(--card); border-radius: 10px;
+    padding: .8rem 1rem; box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: .6rem;
+    font-size: .95rem;
+  }
+  .equip-item .eq-icon { font-size: 1.3rem; }
+  
+  /* TARIFS */
+  .tarif-cards {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+  }
+  .tarif-card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 1.5rem; text-align: center;
+    box-shadow: var(--shadow); border-top: 4px solid var(--accent);
+  }
+  .tarif-card .period { font-weight: 600; color: var(--primary); font-size: 1.1rem; }
+  .tarif-card .price { font-size: 2rem; font-weight: 700; color: var(--accent); margin: .5rem 0; }
+  .tarif-card .detail { font-size: .85rem; color: var(--text-light); }
+  
+  /* LOCALISATION */
+  .location-info { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; }
+  .location-text { flex: 1; min-width: 250px; }
+  .location-text ul { list-style: none; margin-top: 1rem; }
+  .location-text li { padding: .3rem 0; font-size: .95rem; }
+  .location-text li::before { content: "📍 "; }
+  .map-placeholder {
+    flex: 1; min-width: 280px; height: 250px;
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .map-placeholder iframe { width: 100%; height: 100%; border: 0; }
+  
+  /* CONTACT */
+  .contact-card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 2rem; box-shadow: var(--shadow);
+    max-width: 500px;
+  }
+  .contact-card p { margin-bottom: .8rem; font-size: 1.05rem; }
+  .contact-card a { color: var(--primary); font-weight: 600; text-decoration: none; }
+  .contact-card a:hover { text-decoration: underline; }
+  .btn-contact {
+    display: inline-block; margin-top: 1rem;
+    background: var(--primary); color: #fff;
+    padding: .8rem 2rem; border-radius: 50px;
+    text-decoration: none; font-weight: 600;
+    transition: background .2s;
+  }
+  .btn-contact:hover { background: var(--primary-light); }
+  
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 2rem;
+    color: var(--text-light); font-size: .85rem;
+    border-top: 1px solid #e0e0e0; margin-top: 2rem;
+  }
+  
+  /* LIGHTBOX */
+  .lightbox {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.9);
+    align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .lightbox.active { display: flex; }
+  .lightbox img { max-width: 90%; max-height: 90vh; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('active')">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<div class="hero">
+  <div class="hero-bg" id="hero-bg"></div>
+  <div class="hero-content">
+    <h1 id="hero-title"></h1>
+    <p class="subtitle" id="hero-subtitle"></p>
+    <span class="badge" id="hero-badge"></span>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="#description">Le logement</a>
+  <a href="#photos">Photos</a>
+  <a href="#equipements">Équipements</a>
+  <a href="#tarifs">Tarifs</a>
+  <a href="#localisation">Localisation</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<section id="description">
+  <h2>Le logement</h2>
+  <p class="description-text" id="desc-text"></p>
+  <div class="key-info" id="key-info"></div>
+</section>
+
+<section id="photos">
+  <h2>Photos</h2>
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<section id="equipements">
+  <h2>Équipements</h2>
+  <div class="equip-grid" id="equip-grid"></div>
+</section>
+
+<section id="tarifs">
+  <h2>Tarifs</h2>
+  <div class="tarif-cards" id="tarif-cards"></div>
+</section>
+
+<section id="localisation">
+  <h2>Localisation</h2>
+  <div class="location-info" id="location-info"></div>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <div class="contact-card" id="contact-card"></div>
+</section>
+
+<footer id="footer"></footer>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  📝 CONFIGURATION — MODIFIER ICI POUR PERSONNALISER        ║
+// ║  Pas besoin de toucher au HTML/CSS, tout se change ici !    ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const CONFIG = {
+
+  // ── Titre & accroche ──
+  titre: "Le Nid Douillet",
+  sousTitre: "Appartement chaleureux au cœur de la ville",
+  badge: "★ Meublé de tourisme",
+
+  // ── Image de fond du hero (URL d'une photo ou "" pour le dégradé seul) ──
+  heroImage: "",
+
+  // ── Description ──
+  description: `Bienvenue dans notre appartement entièrement meublé et équipé, 
+idéal pour un séjour touristique ou professionnel. Situé en plein centre-ville, 
+vous serez à deux pas des commerces, restaurants et transports en commun. 
+L'appartement a été entièrement rénové en 2024 avec des matériaux de qualité.`,
+
+  // ── Infos clés (icône, label, valeur) ──
+  infos: [
+    { icon: "🏠", label: "Type", value: "T2 — 45m²" },
+    { icon: "🛏️", label: "Couchages", value: "4 personnes" },
+    { icon: "📍", label: "Étage", value: "2ème avec ascenseur" },
+    { icon: "⭐", label: "Classement", value: "Meublé tourisme" },
+  ],
+
+  // ── Photos (URLs des images — ajouter autant que voulu) ──
+  // Laisser vide [] pour afficher des placeholders
+  photos: [
+    // "https://exemple.com/photo-salon.jpg",
+    // "https://exemple.com/photo-chambre.jpg",
+    // "https://exemple.com/photo-cuisine.jpg",
+    // "https://exemple.com/photo-sdb.jpg",
+  ],
+
+  // ── Équipements (icône + nom) ──
+  equipements: [
+    { icon: "📶", nom: "Wi-Fi haut débit" },
+    { icon: "📺", nom: "TV écran plat" },
+    { icon: "🍳", nom: "Cuisine équipée" },
+    { icon: "🧺", nom: "Lave-linge" },
+    { icon: "❄️", nom: "Climatisation" },
+    { icon: "🅿️", nom: "Parking gratuit" },
+    { icon: "🛁", nom: "Salle de bain" },
+    { icon: "☕", nom: "Machine à café" },
+    { icon: "🔑", nom: "Entrée autonome" },
+    { icon: "🧹", nom: "Ménage inclus" },
+    { icon: "🛏️", nom: "Linge de lit fourni" },
+    { icon: "🧴", nom: "Produits d'accueil" },
+  ],
+
+  // ── Tarifs (période, prix, détail) ──
+  tarifs: [
+    { periode: "Nuitée", prix: "75€", detail: "Minimum 2 nuits" },
+    { periode: "Semaine", prix: "450€", detail: "Soit ~64€/nuit" },
+    { periode: "Mois", prix: "1 200€", detail: "Charges comprises" },
+  ],
+
+  // ── Localisation ──
+  ville: "Montpellier",
+  quartier: "Centre historique — Écusson",
+  proximite: [
+    "Gare Saint-Roch — 10 min à pied",
+    "Tramway ligne 1 — 2 min",
+    "Plage — 20 min en voiture",
+    "Aéroport — 15 min",
+  ],
+  // URL Google Maps embed (clic droit sur Google Maps → Partager → Intégrer)
+  // Laisser "" pour ne pas afficher de carte
+  mapEmbed: "",
+
+  // ── Contact ──
+  prenom: "Pascal",
+  telephone: "",        // ex: "06 12 34 56 78"
+  email: "pascal@email.com",
+  messageBienvenue: "N'hésitez pas à me contacter pour toute question ou réservation !",
+
+  // ── Liens plateformes (laisser "" si pas de compte) ──
+  airbnb: "",    // ex: "https://airbnb.com/rooms/123456"
+  booking: "",   // ex: "https://booking.com/hotel/..."
+
+  // ── Pied de page ──
+  footer: "© 2026 Le Nid Douillet — Location meublée non professionnelle (LMNP)",
+};
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  🚫 NE PAS MODIFIER EN DESSOUS — moteur de rendu           ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+function render() {
+  document.title = `${CONFIG.titre} — Location meublée`;
+
+  // Hero
+  document.getElementById('hero-title').textContent = CONFIG.titre;
+  document.getElementById('hero-subtitle').textContent = CONFIG.sousTitre;
+  document.getElementById('hero-badge').textContent = CONFIG.badge;
+  if (CONFIG.heroImage) {
+    document.getElementById('hero-bg').style.backgroundImage = `url('${CONFIG.heroImage}')`;
+  }
+
+  // Description
+  document.getElementById('desc-text').textContent = CONFIG.description;
+  const keyInfo = document.getElementById('key-info');
+  keyInfo.innerHTML = CONFIG.infos.map(i => `
+    <div class="key-info-item">
+      <div class="icon">${i.icon}</div>
+      <div class="value">${i.value}</div>
+      <div class="label">${i.label}</div>
+    </div>
+  `).join('');
+
+  // Photos
+  const gallery = document.getElementById('gallery');
+  if (CONFIG.photos.length > 0) {
+    gallery.innerHTML = CONFIG.photos.map(url => `
+      <img src="${encodeURI(url)}" alt="Photo du logement" loading="lazy"
+           onclick="openLightbox(this.src)">
+    `).join('');
+  } else {
+    gallery.innerHTML = Array(4).fill(0).map((_, i) => `
+      <div class="photo-placeholder">📷 Photo ${i + 1} à ajouter</div>
+    `).join('');
+  }
+
+  // Équipements
+  document.getElementById('equip-grid').innerHTML = CONFIG.equipements.map(e => `
+    <div class="equip-item">
+      <span class="eq-icon">${e.icon}</span>
+      <span>${e.nom}</span>
+    </div>
+  `).join('');
+
+  // Tarifs
+  document.getElementById('tarif-cards').innerHTML = CONFIG.tarifs.map(t => `
+    <div class="tarif-card">
+      <div class="period">${t.periode}</div>
+      <div class="price">${t.prix}</div>
+      <div class="detail">${t.detail}</div>
+    </div>
+  `).join('');
+
+  // Localisation
+  const locDiv = document.getElementById('location-info');
+  let locHTML = `<div class="location-text">
+    <p><strong>${CONFIG.ville}</strong> — ${CONFIG.quartier}</p>
+    <ul>${CONFIG.proximite.map(p => `<li>${p}</li>`).join('')}</ul>
+  </div>`;
+  if (CONFIG.mapEmbed) {
+    locHTML += `<div class="map-placeholder"><iframe src="${encodeURI(CONFIG.mapEmbed)}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>`;
+  }
+  locDiv.innerHTML = locHTML;
+
+  // Contact
+  const cc = document.getElementById('contact-card');
+  let contactHTML = `<p>${CONFIG.messageBienvenue}</p>`;
+  contactHTML += `<p>👤 <strong>${CONFIG.prenom}</strong></p>`;
+  if (CONFIG.telephone) contactHTML += `<p>📞 <a href="tel:${CONFIG.telephone.replace(/\s/g,'')}">${CONFIG.telephone}</a></p>`;
+  if (CONFIG.email) contactHTML += `<p>✉️ <a href="mailto:${CONFIG.email}">${CONFIG.email}</a></p>`;
+  if (CONFIG.airbnb) contactHTML += `<a href="${encodeURI(CONFIG.airbnb)}" class="btn-contact" target="_blank" rel="noopener">Voir sur Airbnb</a> `;
+  if (CONFIG.booking) contactHTML += `<a href="${encodeURI(CONFIG.booking)}" class="btn-contact" target="_blank" rel="noopener">Voir sur Booking</a>`;
+  if (!CONFIG.airbnb && !CONFIG.booking) {
+    contactHTML += `<a href="mailto:${CONFIG.email}" class="btn-contact">Envoyer un email</a>`;
+  }
+  cc.innerHTML = contactHTML;
+
+  // Footer
+  document.getElementById('footer').textContent = CONFIG.footer;
+}
+
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>
