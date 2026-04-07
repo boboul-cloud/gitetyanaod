@@ -341,15 +341,18 @@ function render() {
   }
 
   // Description
-  document.getElementById('desc-text').textContent = CONFIG.description;
-  const keyInfo = document.getElementById('key-info');
-  keyInfo.innerHTML = CONFIG.infos.map(i => `
-    <div class="key-info-item">
-      <div class="icon">${i.icon}</div>
-      <div class="value">${i.value}</div>
-      <div class="label">${i.label}</div>
-    </div>
-  `).join('');
+  const descText = document.getElementById('desc-text');
+  if (descText) {
+    descText.textContent = CONFIG.description;
+    const keyInfo = document.getElementById('key-info');
+    keyInfo.innerHTML = CONFIG.infos.map(i => `
+      <div class="key-info-item">
+        <div class="icon">${i.icon}</div>
+        <div class="value">${i.value}</div>
+        <div class="label">${i.label}</div>
+      </div>
+    `).join('');
+  }
 
   // Photos
   const gallery = document.getElementById('gallery');
@@ -373,24 +376,29 @@ function render() {
   `).join('');
 
   // Tarifs
-  document.getElementById('tarif-cards').innerHTML = CONFIG.tarifs.map(t => `
-    <div class="tarif-card">
-      <div class="period">${t.periode}</div>
-      <div class="price">${t.prix}</div>
-      <div class="detail">${t.detail}</div>
-    </div>
-  `).join('');
+  const tarifCards = document.getElementById('tarif-cards');
+  if (tarifCards) {
+    tarifCards.innerHTML = CONFIG.tarifs.map(t => `
+      <div class="tarif-card">
+        <div class="period">${t.periode}</div>
+        <div class="price">${t.prix}</div>
+        <div class="detail">${t.detail}</div>
+      </div>
+    `).join('');
+  }
 
   // Localisation
   const locDiv = document.getElementById('location-info');
-  let locHTML = `<div class="location-text">
-    <p><strong>${CONFIG.ville}</strong> — ${CONFIG.quartier}</p>
-    <ul>${CONFIG.proximite.map(p => `<li>${p}</li>`).join('')}</ul>
-  </div>`;
-  if (CONFIG.mapEmbed) {
-    locHTML += `<div class="map-placeholder"><iframe src="${encodeURI(CONFIG.mapEmbed)}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>`;
+  if (locDiv) {
+    let locHTML = `<div class="location-text">
+      <p><strong>${CONFIG.ville}</strong> — ${CONFIG.quartier}</p>
+      <ul>${CONFIG.proximite.map(p => `<li>${p}</li>`).join('')}</ul>
+    </div>`;
+    if (CONFIG.mapEmbed) {
+      locHTML += `<div class="map-placeholder"><iframe src="${encodeURI(CONFIG.mapEmbed)}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>`;
+    }
+    locDiv.innerHTML = locHTML;
   }
-  locDiv.innerHTML = locHTML;
 
   // Contact
   const cc = document.getElementById('contact-card');
