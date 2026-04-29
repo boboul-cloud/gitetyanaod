@@ -279,10 +279,25 @@ L'appartement a été entièrement rénové en 2024 avec des matériaux de quali
   // ── Photos (URLs des images — ajouter autant que voulu) ──
   // Laisser vide [] pour afficher des placeholders
   photos: [
-    // "https://exemple.com/photo-salon.jpg",
-    // "https://exemple.com/photo-chambre.jpg",
-    // "https://exemple.com/photo-cuisine.jpg",
-    // "https://exemple.com/photo-sdb.jpg",
+    "./IMG_1303.JPG",
+    "./IMG_1305.JPG",
+    "./IMG_1306.JPG",
+    "./IMG_1315.JPG",
+    "./IMG_1316.JPG",
+    "./IMG_1319.JPG",
+    "./IMG_1320.JPG",
+    "./IMG_1321.JPG",
+    "./IMG_1322.JPG",
+    "./IMG_1323.JPG",
+    "./IMG_1324.JPG",
+    "./IMG_1326.JPG",
+    "./IMG_1328.JPG",
+    "./IMG_1330.JPG",
+    "./IMG_7586.JPG",
+    "./IMG_8509.HEIC",
+    "./40c1514b-f42d-4d42-a487-44ee6735193c.JPG",
+    "./f31d3c6f-b08b-4a3c-9c89-59d7f2faf402.JPG",
+    "./f4f2f71c-8c25-4918-9d75-b5f0ba027ddf.JPG",
   ],
 
   // ── Équipements (icône + nom) ──
@@ -323,7 +338,7 @@ L'appartement a été entièrement rénové en 2024 avec des matériaux de quali
 
   // ── Contact ──
   prenom: "Pascal",
-  telephone: "",        // ex: "06 12 34 56 78"
+  telephone: "+33660322393",        // ex: "06 12 34 56 78"
   email: "pascaljaffredou@gmail.com",
   messageBienvenue: "N'hésitez pas à me contacter pour toute question ou réservation !",
 
@@ -419,7 +434,7 @@ function render() {
   if (CONFIG.airbnb) contactHTML += `<a href="${encodeURI(CONFIG.airbnb)}" class="btn-contact" target="_blank" rel="noopener">Voir sur Airbnb</a> `;
   if (CONFIG.booking) contactHTML += `<a href="${encodeURI(CONFIG.booking)}" class="btn-contact" target="_blank" rel="noopener">Voir sur Booking</a>`;
   if (!CONFIG.airbnb && !CONFIG.booking) {
-    contactHTML += `<a href="mailto:${CONFIG.email}" class="btn-contact">Envoyer un email</a>`;
+    contactHTML += `<a href="mailto:${CONFIG.email}" class="btn-contact" style="color: #fff;">Envoyer un email</a>`;
   }
   cc.innerHTML = contactHTML;
 
