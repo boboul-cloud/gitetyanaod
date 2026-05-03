@@ -81,17 +81,45 @@
   .key-info-item .value { font-weight: 700; font-size: 1.1rem; }
   
   /* PHOTOS */
-  .gallery {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
+  .gallery-container {
+    display: flex; flex-direction: column; gap: 1.5rem;
   }
-  .gallery img {
-    width: 100%; height: 220px; object-fit: cover;
-    border-radius: var(--radius); box-shadow: var(--shadow);
-    transition: transform .3s;
-    cursor: pointer;
+  .main-photo-wrapper {
+    position: relative;
+    width: 100%; max-width: 600px; margin: 0 auto;
   }
-  .gallery img:hover { transform: scale(1.03); }
+  .main-photo {
+    width: 100%; height: auto; border-radius: var(--radius);
+    box-shadow: var(--shadow); display: block; cursor: pointer;
+  }
+  .thumbnails-wrapper {
+    position: relative;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .arrow-btn {
+    background: var(--primary); color: #fff;
+    border: none; width: 40px; height: 40px;
+    border-radius: 50%; cursor: pointer;
+    font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .arrow-btn:hover { background: var(--primary-light); }
+  .thumbnails-container {
+    display: flex; gap: 0.8rem; overflow-x: auto; overflow-y: hidden;
+    padding: 0.5rem 0; scroll-behavior: smooth;
+    flex: 1;
+  }
+  .thumbnails-container::-webkit-scrollbar { height: 4px; }
+  .thumbnails-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+  .thumbnail {
+    width: 80px; height: 80px; object-fit: cover;
+    border-radius: 8px; cursor: pointer; flex-shrink: 0;
+    border: 2px solid transparent; transition: all .2s;
+    box-shadow: var(--shadow);
+  }
+  .thumbnail:hover { transform: scale(1.05); }
+  .thumbnail.active { border-color: var(--accent); }
   .photo-placeholder {
     width: 100%; height: 220px;
     border-radius: var(--radius);
@@ -189,6 +217,7 @@
   <div class="hero-content">
     <h1 id="hero-title"></h1>
     <p class="subtitle" id="hero-subtitle"></p>
+    <p id="hero-description" style="font-size: 1rem; opacity: 0.95; margin-top: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;"></p>
     <span class="badge" id="hero-badge"></span>
   </div>
 </div>
@@ -210,7 +239,16 @@
 
 <section id="photos">
   <h2>Photos</h2>
-  <div class="gallery" id="gallery"></div>
+  <div class="gallery-container" id="gallery-container">
+    <div class="main-photo-wrapper">
+      <img class="main-photo" id="main-photo" src="" alt="Photo principale du logement" onclick="openLightbox(this.src)">
+    </div>
+    <div class="thumbnails-wrapper">
+      <button class="arrow-btn" id="prev-btn" onclick="scrollThumbnails('left')">←</button>
+      <div class="thumbnails-container" id="thumbnails-container"></div>
+      <button class="arrow-btn" id="next-btn" onclick="scrollThumbnails('right')">→</button>
+    </div>
+  </div>
 </section>
 
 <section id="equipements">
@@ -257,10 +295,11 @@ const CONFIG = {
   // ── Titre & accroche ──
   titre: "Ty an aod",
   sousTitre: "Maison chaleureuse sur la dune",
+  descriptionHero: "Loué dans son intégralité, l'espace se divise aisément en deux parties disposant chacune d'une television, d'une cuisine/séjour, permettant ainsi de ptofiter d'un espace de traqvail séparé ou d'une suite parentale indépendante",
   badge: "Meublé de tourisme ****",
 
   // ── Image de fond du hero (URL d'une photo ou "" pour le dégradé seul) ──
-  heroImage: "",
+  heroImage: "./IMG-1374.JPG",
 
   // ── Description ──
   description: `Bienvenue dans notre appartement entièrement meublé et équipé, 
@@ -360,6 +399,7 @@ function render() {
   // Hero
   document.getElementById('hero-title').textContent = CONFIG.titre;
   document.getElementById('hero-subtitle').textContent = CONFIG.sousTitre;
+  document.getElementById('hero-description').textContent = CONFIG.descriptionHero;
   document.getElementById('hero-badge').textContent = CONFIG.badge;
   if (CONFIG.heroImage) {
     document.getElementById('hero-bg').style.backgroundImage = `url('${CONFIG.heroImage}')`;
@@ -379,17 +419,22 @@ function render() {
     `).join('');
   }
 
-  // Photos
-  const gallery = document.getElementById('gallery');
+  // Photos — nouvelle galerie
   if (CONFIG.photos.length > 0) {
-    gallery.innerHTML = CONFIG.photos.map(url => `
-      <img src="${encodeURI(url)}" alt="Photo du logement" loading="lazy"
-           onclick="openLightbox(this.src)">
+    // Afficher la première photo comme photo principale
+    document.getElementById('main-photo').src = encodeURI(CONFIG.photos[0]);
+    
+    // Créer les vignettes
+    const thumbnailsContainer = document.getElementById('thumbnails-container');
+    thumbnailsContainer.innerHTML = CONFIG.photos.map((url, idx) => `
+      <img class="thumbnail ${idx === 0 ? 'active' : ''}" 
+           src="${encodeURI(url)}" 
+           alt="Photo ${idx + 1}" 
+           loading="lazy"
+           onclick="selectPhoto(this, ${idx})">
     `).join('');
   } else {
-    gallery.innerHTML = Array(4).fill(0).map((_, i) => `
-      <div class="photo-placeholder">📷 Photo ${i + 1} à ajouter</div>
-    `).join('');
+    document.getElementById('main-photo').src = '';
   }
 
   // Équipements
@@ -440,6 +485,29 @@ function render() {
 
   // Footer
   document.getElementById('footer').textContent = CONFIG.footer;
+}
+
+function selectPhoto(thumbnail, index) {
+  // Mettre à jour la photo principale
+  document.getElementById('main-photo').src = encodeURI(CONFIG.photos[index]);
+  
+  // Mettre à jour l'état actif des vignettes
+  const allThumbnails = document.querySelectorAll('.thumbnail');
+  allThumbnails.forEach(t => t.classList.remove('active'));
+  thumbnail.classList.add('active');
+  
+  // Scroller la vignette au centre
+  thumbnail.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+}
+
+function scrollThumbnails(direction) {
+  const container = document.getElementById('thumbnails-container');
+  const scrollAmount = 200; // pixels
+  if (direction === 'left') {
+    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  } else {
+    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
 }
 
 function openLightbox(src) {
